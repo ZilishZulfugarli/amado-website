@@ -1,0 +1,85 @@
+﻿@model RegisterIndexVM;
+@using MiniLayihe.Models;
+<form method="post">
+    <!-- UserName input -->
+    <div class="form-outline mb-4">
+        <input asp-for="FirstName" type="text" id="form2Example1" class="form-control" />
+        <label asp-for="FirstName" class="form-label" for="form2Example1">FirstName</label>
+        <span style="color:red" asp-validation-for="FirstName"></span>
+    </div>
+
+    <!-- UserName input -->
+    <div class="form-outline mb-4">
+        <input asp-for="LastName" type="text" id="form2Example1" class="form-control" />
+        <label asp-for="LastName" class="form-label" for="form2Example1">LastName</label>
+        <span style="color:red" asp-validation-for="LastName"></span>
+    </div>
+
+    <!-- UserName input -->
+    <div class="form-outline mb-4">
+        <input asp-for="UserName" type="text" id="form2Example1" class="form-control" />
+        <label asp-for="UserName" class="form-label" for="form2Example1">Username</label>
+        <span style="color:red" asp-validation-for="UserName"></span>
+    </div>
+
+    <!-- UserName input -->
+    <div class="form-outline mb-4">
+        <input asp-for="PhoneNumber" type="number" id="form2Example1" class="form-control" />
+        <label asp-for="PhoneNumber" class="form-label" for="form2Example1">Phone Number</label>
+        <span style="color:red" asp-validation-for="PhoneNumber"></span>
+    </div>
+
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+        <input asp-for="Email" type="email" id="form2Example1" class="form-control" />
+        <label asp-for="Email" class="form-label" for="form2Example1">Email address</label>
+        <span style="color:red" asp-validation-for="Email"></span>
+    </div>
+
+    <!-- Password input -->
+    <div class="form-outline mb-4">
+        <input asp-for="Password" type="password" id="form2Example2" class="form-control" />
+        <label asp-for="Password" class="form-label" for="form2Example2">Password</label>
+        <span style="color:red" asp-validation-for="Password"></span>
+    </div>
+
+    <!-- Password Accept input -->
+    <div class="form-outline mb-4">
+        <input asp-for="ConfirmPassword" type="password" id="form2Example2" class="form-control" />
+        <label asp-for="ConfirmPassword" class="form-label" for="form2Example2">Confirm Password</label>
+        <span style="color:red" asp-validation-for="ConfirmPassword"></span>
+    </div>
+
+    <!-- 2 column grid layout for inline styling -->
+    <div class="row mb-4">
+
+        <div class="col">
+            <!-- Simple link -->
+            <a href="#!">Forgot password?</a>
+        </div>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary btn-block mb-4">Sign Up</button>
+
+    <!-- Register buttons -->
+    <div class="text-center">
+        <p>Have a member? <a asp-action="Index" asp-controller="Login">Login</a></p>
+        <p>or sign up with:</p>
+        <button type="button" class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-facebook-f"></i>
+        </button>
+
+        <button type="button" class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-google"></i>
+        </button>
+
+        <button type="button" class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-twitter"></i>
+        </button>
+
+        <button type="button" class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-github"></i>
+        </button>
+    </div>
+</form>
