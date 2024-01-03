@@ -1,19 +1,28 @@
 ﻿@model MiniLayihe.Models.ProductIndexVM;
 
-@using MiniLayihe.Models;
+@using MiniLayihe.Entities;
 @{
     Layout = null;
 }
 
 @foreach (var item in Model.Products)
 {
-    <div class="card" style="width: 18rem; border: 1px solid black">
-        <div class="card-body">
-            <img src="~/img/@item.ProductImages." />
-            <h5 class="card-title">@item.Name</h5>
-            <p>@item.Category.Name</p>
-            <a class="btn btn-warning" asp-action="Delete" asp-controller="AdminProduct" asp-route-id="@item.Id">Delete</a>
-            <a class="btn btn-danger" asp-action="Update" asp-controller="AdminProduct" asp-route-id="@item.Id">Update</a>
+    @foreach (var img in item.ProductImages)
+        {
+        <div class="card" style="width: 18rem; border: 1px solid black; border-radius: 20px;">
+            <img src="~/img/@img.ImagePath" class="card-img-top" alt="Product Image" style="width:290px;height:150px; border-radius: 20px;">
+            <div class="card-body">
+                <h5 class="card-title">Name: @item.Name</h5>
+                <p class="card-text">Description: @item.Description</p>
+                <p>Color: @item.Color.Name</p>
+                <p>Price: @item.Price</p>
+                <p>Brand: @item.Brand.Name</p>
+                <p>Category: @item.Category.Name</p>
+                <a class="btn btn-warning" asp-action="Delete" asp-controller="AdminProduct" asp-route-id="@item.Id">Delete</a>
+                <a class="btn btn-danger" asp-action="Update" asp-controller="AdminProduct" asp-route-id="@item.Id">Update</a>
+            </div>
         </div>
-    </div>
-}
+
+   
+            }
+        }

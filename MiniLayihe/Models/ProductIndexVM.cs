@@ -9,6 +9,7 @@ namespace MiniLayihe.Models
 		public List<Category>? Categories { get; set; }
         public List<Brand>? Brands { get; set; }
         public List<Color>? Colors { get; set; }
-    }
+		public List<ProductImage>? Image { get; set; }
+	}
 }
 

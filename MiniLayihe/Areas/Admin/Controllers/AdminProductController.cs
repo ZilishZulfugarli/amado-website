@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -99,7 +100,18 @@ namespace MiniLayihe.Areas.Admin.Controllers
                 return View(model);
             }
 
-            var image = _fileService.UploadFile(model.Image);
+            var productImage = new List<ProductImage>();
+            foreach (var images in model.Image)
+            {
+                var imagePath = _fileService.UploadFile(images);
+
+                productImage.Add(new ProductImage
+                {
+                    ImagePath = imagePath
+                });
+            }
+
+            //var image = _fileService.UploadFile(model.Image);
 
             var product = new Product
             {
@@ -109,13 +121,7 @@ namespace MiniLayihe.Areas.Admin.Controllers
                 CategoryId = model.CategoryId,
                 BrandId = model.BrandId,
                 ColorId = model.ColorId,
-                ProductImages = new List<ProductImage>
-                {
-                   new ProductImage
-                   {
-                       ImagePath = image
-                   }
-                }
+                ProductImages = productImage
             };
 
             _dbContext.Products.Add(product);
@@ -126,7 +132,11 @@ namespace MiniLayihe.Areas.Admin.Controllers
 
         public IActionResult Update(int id)
         {
-            var product = _dbContext.Products.FirstOrDefault(x => x.Id == id);
+            var product = _dbContext.Products.Include(x => x.Category).Include(x => x.ProductImages).FirstOrDefault(x => x.Id == id);
+
+            var categories = _dbContext.Categories.ToList();
+            var brands = _dbContext.Brands.ToList();
+            var colors = _dbContext.Colors.ToList();
 
             var model = new ProductUpdateVM
             {
@@ -136,13 +146,10 @@ namespace MiniLayihe.Areas.Admin.Controllers
                 Price = (int)product.Price,
                 Name = product.Name,
                 Description = product.Description,
-                Image = (IFormFile)product.ProductImages
+                ImageName = product.ProductImages?.FirstOrDefault()?.ImagePath ?? string.Empty
             };
 
-            var categories = _dbContext.Categories.ToList();
-            var brands = _dbContext.Brands.ToList();
-            var colors = _dbContext.Colors.ToList();
-
+            
             model.Brand = brands.Select(x => new SelectListItem
             {
                 Text = x.Name,
@@ -166,7 +173,7 @@ namespace MiniLayihe.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Update(ProductUpdateVM model)
         {
-            var product = _dbContext.Products.FirstOrDefault(x => x.Id == model.Id);
+            var product = _dbContext.Products.Include(x => x.ProductImages).FirstOrDefault(x => x.Id == model.Id);
 
             if (product == null) return NotFound();
 
@@ -176,7 +183,27 @@ namespace MiniLayihe.Areas.Admin.Controllers
             product.ColorId = model.ColorId;
             product.Price = model.Price;
             product.Description = model.Description;
-            product.ProductImages = (List<ProductImage>?)model.Image;
+
+            
+            if(model.Image != null)
+            {
+                if(product.ProductImages != null)
+                {
+                    foreach(var img in product.ProductImages)
+                    {
+                        _fileService.DeleteFile(img.ImagePath);
+                    }
+                }
+            }
+
+            var image = _fileService.UploadFile(model.Image);
+            product.ProductImages = new List<ProductImage>
+                {
+                   new ProductImage
+                   {
+                       ImagePath = image
+                   }
+                };
 
             _dbContext.SaveChanges();
 

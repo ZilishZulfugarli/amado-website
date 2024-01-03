@@ -15,6 +15,7 @@ namespace MiniLayihe.Entities
 		public Color? Color { get; set; }
 		public Brand? Brand { get; set; }
 		public List<ProductImage>? ProductImages { get; set; }
-	}
+
+    }
 }
 

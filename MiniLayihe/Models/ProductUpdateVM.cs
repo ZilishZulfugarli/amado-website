@@ -13,6 +13,7 @@ namespace MiniLayihe.Models
         public int CategoryId { get; set; }
         public int ColorId { get; set; }
         public int BrandId { get; set; }
+        public string ImageName { get; set; }
         public IFormFile? Image { get; set; }
         public Category? Categories { get; set; }
         public Color? Colors { get; set; }

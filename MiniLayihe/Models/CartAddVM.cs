@@ -3,9 +3,9 @@ using MiniLayihe.Entities;
 
 namespace MiniLayihe.Models
 {
-	public class CategoryIndexVM
+	public class CartAddVM
 	{
-		public List<Category>? Categories { get; set; }
+		public Product? Product { get; set; }
 	}
 }
 

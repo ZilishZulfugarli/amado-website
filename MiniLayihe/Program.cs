@@ -17,6 +17,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<FileService>();
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 
 builder.Services.AddAuthorization(options =>
 {

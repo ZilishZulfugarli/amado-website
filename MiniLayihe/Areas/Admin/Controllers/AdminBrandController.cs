@@ -88,7 +88,8 @@ namespace MiniLayihe.Areas.Admin.Controllers
 
             if (brand == null) return NotFound();
 
-            _dbContext.Remove(brand);
+            _dbContext.Brands.Remove(brand);
+            _dbContext.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
