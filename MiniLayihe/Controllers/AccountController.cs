@@ -113,6 +113,7 @@ namespace MiniLayihe.Controllers
             var user = await _userManager.GetUserAsync(User);
             return View(user);
         }
+
     }
 }
 

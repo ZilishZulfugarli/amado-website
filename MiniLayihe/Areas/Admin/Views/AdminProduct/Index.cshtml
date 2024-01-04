@@ -4,7 +4,7 @@
 @{
     Layout = null;
 }
-
+<a asp-action="Add" asp-controller="AdminProduct" class="btn primary-btn">Add Product</a>
 @foreach (var item in Model.Products)
 {
     @foreach (var img in item.ProductImages)
@@ -18,6 +18,7 @@
                 <p>Price: @item.Price</p>
                 <p>Brand: @item.Brand.Name</p>
                 <p>Category: @item.Category.Name</p>
+                <p>Quantity: @item.Quantity</p>
                 <a class="btn btn-warning" asp-action="Delete" asp-controller="AdminProduct" asp-route-id="@item.Id">Delete</a>
                 <a class="btn btn-danger" asp-action="Update" asp-controller="AdminProduct" asp-route-id="@item.Id">Update</a>
             </div>

@@ -32,35 +32,43 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                @foreach (var item in Model.Products)
-                                    {
+                            @if(User.Identity.IsAuthenticated)
+                                { 
+                            @foreach (var item in Model.CartItems)
+                                {
+                                <tr>
 
-                                <td class="cart_product_img">
-                                    @foreach (var img in item.ProductImages.Take(1))
+                                    <td class="cart_product_img">
+
+                                        @foreach (var img in item.Product.ProductImages)
                                         {
-                                    <a href="#"><img src="~/img/@img.ImagePath" alt="Product"></a>
+                                            <a href="#"><img src="~/img/@img.ImagePath" alt="Product"></a>
                                         }
-                                </td>
-                                <td class="cart_product_desc">
-                                    <h5>@item.Name</h5>
-                                </td>
-                                <td class="price">
-                                    <span>$@item.Price</span>
-                                </td>
-                                <td class="qty">
-                                    <div class="qty-btn d-flex">
-                                        <p>Qty</p>
-                                        <div class="quantity">
-                                            <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                            <input type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantity" value="1">
-                                            <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                    </td>
+                                    <td class="cart_product_desc">
+                                        <h5>@item.ProductName</h5>
+                                    </td>
+                                    <td class="price">
+                                        <span>$@item.Price</span>
+                                    </td>
+                                    <td class="qty">
+                                        <div class="qty-btn d-flex">
+                                            <p>Qty</p>
+                                            <div class="quantity">
+                                                <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                                <input asp-for="Quantity" asp-action="AddToCart" asp-controller="Product" asp-route-quantity="value" type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantity">
+                                                <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                    }
-                            </tr>
-                        </tbody>
+                                    </td>
+                                    <td class="price">
+                                        <a asp-action="Delete" asp-controller="Product" asp-route-id="@item.Id" class="btn">X</a>
+                                    </td>
+
+                                </tr>
+                                }
+                                }
+                            </tbody>
                     </table>
                 </div>
             </div>
@@ -68,8 +76,7 @@
                 <div class="cart-summary">
                     <h5>Cart Total</h5>
                     <ul class="summary-table">
-                       @*Burda product item elave etmediyime gore subtotali hesablamaq olmur. Quantity elave et.*@
-                        <li><span>subtotal:</span> <span>$@(Model.Products.Sum(item => item.Price )</span></li>
+                        <li><span>subtotal:</span> <span>$@(Model.CartItems.Sum(x => x.Price * x.Quantity));</span></li>
                         <li><span>delivery:</span> <span>Free</span></li>
                         <li><span>total:</span> <span>$140.00</span></li>
                     </ul>

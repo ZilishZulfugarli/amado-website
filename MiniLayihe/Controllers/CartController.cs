@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,12 +24,36 @@ namespace MiniLayihe.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            var product = _dbContext.Products.Include(x => x.ProductImages).ToList();
+            
 
-            var model = new CartIndexVM()
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Load user's cart with related products
+            var user = _dbContext.Carts
+                .Include(c => c.Products)
+                .FirstOrDefault(x => x.UserId == userId);
+
+            var users = _dbContext.Carts.Include(x => x.CartItems).FirstOrDefault(x => x.UserId == userId);
+
+            var cart = _dbContext.Carts
+            .Include(c => c.CartItems)
+            .ThenInclude(ci => ci.Product)
+            .ThenInclude(x => x.ProductImages)
+            .FirstOrDefault(c => c.UserId == userId);
+            if (user == null)
             {
-                Products = product
+                return View();
+            }
+
+            var model = new CartIndexVM
+            {
+                CartItems = cart.CartItems,
+                Products = cart.CartItems.Select(ci => ci.Product).ToList(),
+                UserId = cart.UserId,
+                Price = cart.Products.Sum(p => p.Price),
+                Quantity = cart.Quantity,
             };
+
             return View(model);
         }
 

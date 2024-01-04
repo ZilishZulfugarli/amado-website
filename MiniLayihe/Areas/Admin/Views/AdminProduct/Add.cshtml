@@ -17,6 +17,10 @@
         <textarea asp-for="Description" class="form-control" rows="3"></textarea>
     </div>
     <div class="mb-3">
+        <label asp-for="Quantity" class="form-label">Add Product Quantity</label>
+        <input asp-for="Quantity" type="number" class="form-control" rows="3"></input>
+    </div>
+    <div class="mb-3">
         <label asp-for="CategoryId" class="form-label">Product Category</label>
         <select asp-for="CategoryId" asp-items="Model.Category">
             <option value="">

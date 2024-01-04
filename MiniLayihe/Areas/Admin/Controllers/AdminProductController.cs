@@ -121,6 +121,7 @@ namespace MiniLayihe.Areas.Admin.Controllers
                 CategoryId = model.CategoryId,
                 BrandId = model.BrandId,
                 ColorId = model.ColorId,
+                Quantity = model.Quantity,
                 ProductImages = productImage
             };
 

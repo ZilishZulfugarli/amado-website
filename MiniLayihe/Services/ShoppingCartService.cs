@@ -1,18 +1,25 @@
 ﻿using System;
 using MiniLayihe.Entities;
+using MiniLayihe.Data;
 
 namespace MiniLayihe.Services
 {
     public interface IShoppingCartService
     {
-        void AddToCart(int productId, string productName, decimal price, int quantity);
+        void AddToCart(string userId, int productId, string productName, decimal price, int quantity);
         List<Cart> GetCartItems();
     }
     public class ShoppingCartService : IShoppingCartService
 	{
             private readonly List<Cart> _cart = new List<Cart>();
+        private readonly AppDbContext _dbContext;
 
-            public void AddToCart(int productId, string productName, decimal price, int quantity)
+        public ShoppingCartService(AppDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public void AddToCart(string userId, int productId, string productName, decimal price, int quantity)
             {
                 var existingItem = _cart.FirstOrDefault(item => item.ProductId == productId);
 
@@ -24,6 +31,7 @@ namespace MiniLayihe.Services
                 {
                     var newItem = new Cart
                     {
+                        UserId = userId,
                         ProductId = productId,
                         ProductName = productName,
                         Price = price,

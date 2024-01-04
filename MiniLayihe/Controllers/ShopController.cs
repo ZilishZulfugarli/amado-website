@@ -20,12 +20,19 @@ namespace MiniLayihe.Controllers
             _dbContext = dbContext;
         }
         // GET: /<controller>/
-        public IActionResult Index()
+        public IActionResult Index(int? categoryId, int? colorId, int? brandId)
         {
-            var products = _dbContext.Products.AsTracking().Include(x => x.ProductImages).Include(x => x.Brand).Include(x => x.Category).Include(x => x.Color).ToList();
+
             var colors = _dbContext.Colors.ToList();
             var brands = _dbContext.Brands.ToList();
             var categories = _dbContext.Categories.ToList();
+
+            var products = _dbContext.Products.AsTracking().Where(x =>
+            (categoryId == null ? true : x.CategoryId == categoryId)
+            && (brandId == null ? true : x.BrandId == brandId)
+            && (colorId == null ? true : x.ColorId == colorId))
+            .Include(x => x.ProductImages).ToList();
+            
 
             var model = new ViewModel()
             {

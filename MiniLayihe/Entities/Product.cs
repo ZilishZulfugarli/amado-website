@@ -10,7 +10,8 @@ namespace MiniLayihe.Entities
 		public int? CategoryId { get; set; }
 		public int? ColorId { get; set; }
 		public int? BrandId { get; set; }
-
+		public int Quantity { get; set; }
+		public List<Cart>? Carts { get; set; }
 		public Category? Category { get; set; }
 		public Color? Color { get; set; }
 		public Brand? Brand { get; set; }
