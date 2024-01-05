@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiniLayihe.Data;
+using MiniLayihe.Entities;
 using MiniLayihe.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -42,6 +43,29 @@ namespace MiniLayihe.Controllers
                 Categories = categories
             };
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Search(string name)
+        {
+            var model = new ShopSearchVM();
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                model.Products = new List<Product>();
+                return ViewComponent("SearchResult", model);
+            }
+
+            var products = _dbContext.Products
+                .Include(x => x.Brand)
+                .Include(x => x.ProductImages)
+                .AsNoTracking()
+                .Where(x => x.Name.ToLower().StartsWith(name.ToLower()))
+                .ToList();
+
+            model.Products = products;
+
+            return ViewComponent("SearchResult", model);
         }
     }
 }

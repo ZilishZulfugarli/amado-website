@@ -1,0 +1,26 @@
+﻿@model ShopSearchVM
+@foreach (var product in Model.Products)
+{
+    @foreach (var img in product.ProductImages)
+    {
+        <a asp-action="Index" asp-controller="Product" asp-route-id="@product.Id">
+            <div class="container" style="cursor:pointer">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <img src="~/img/@img.ImagePath" class="img-fluid" style="width:50px; height:50px;" alt="Product Photo">
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <p class="mb-0">@product.Name</p>
+                        <p class="mb-0">@product.Brand.Name</p>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <p class="mb-0">$@product.Price</p>
+                    </div>
+
+                </div>
+            </div>
+        </a>
+    }
+}
+

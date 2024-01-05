@@ -29,6 +29,7 @@
     <None Remove="Areas\Admin\Views\AdminProduct\" />
     <None Remove="Services\" />
     <None Remove="Views\Product\" />
+    <None Remove="Views\Shared\Components\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Areas\Admin\Views\Home\Privacy.cshtml" />
@@ -54,6 +55,7 @@
     <Folder Include="Areas\Admin\Views\AdminProduct\" />
     <Folder Include="Services\" />
     <Folder Include="Views\Product\" />
+    <Folder Include="Views\Shared\Components\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
