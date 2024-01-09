@@ -10,7 +10,7 @@
     </div>
     <div class="mb-3">
         <label asp-for="Price" class="form-label">Product Price</label>
-        <input asp-for="Price" type="number" class="form-control" placeholder="Product Price">
+        <input asp-for="Price" type="number" step="2" class="form-control" placeholder="Product Price">
     </div>
     <div class="mb-3">
         <label asp-for="Description" class="form-label">Add Product Description</label>
@@ -42,7 +42,8 @@
     </div>
     <div class="mb-3">
         <label asp-for="Image" class="form-label imgCont">Product Photo</label>
-        <input asp-for="Image" class="form-controll" multiple="multiple"/>
+        <input asp-for="Image" class="form-controll" multiple="multiple" />
+        <span style="color:red" asp-validation-for="Image"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Update Product</button>

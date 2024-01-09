@@ -1,6 +1,7 @@
 ﻿@using MiniLayihe.Entities;
 @using Microsoft.AspNetCore.Identity;
 @using System.Security.Claims;
+@using X.PagedList.Mvc.Core;
 
 
 @inject SignInManager<AppUser> SignInManager
@@ -38,7 +39,7 @@
                     <div class="search-content">
                         <form asp-action="Search" asp-controller="Shop" method="get">
                             <input asp-action="Search" asp-controller="Shop" class="search" type="search" name="name" id="search" placeholder="Type your keyword...">
-                            <button  type="submit"><img src="img/core-img/search.png" alt=""></button>
+                            <button type="submit"><img src="img/core-img/search.png" alt=""></button>
                         </form>
                         <div class="search-result"></div>
                     </div>

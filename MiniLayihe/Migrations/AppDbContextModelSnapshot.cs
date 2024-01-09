@@ -22,36 +22,6 @@ namespace MiniLayihe.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CartProduct", b =>
-                {
-                    b.Property<int>("CartsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CartsId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("CartProduct");
-                });
-
-            modelBuilder.Entity("CartProductImage", b =>
-                {
-                    b.Property<int>("CartsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ImageId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CartsId", "ImageId");
-
-                    b.HasIndex("ImageId");
-
-                    b.ToTable("CartProductImage");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -282,22 +252,20 @@ namespace MiniLayihe.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Quantity")
+                    b.Property<int?>("ProductImageId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductImageId");
 
                     b.HasIndex("UserId");
 
@@ -313,9 +281,6 @@ namespace MiniLayihe.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ImageId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
@@ -334,8 +299,6 @@ namespace MiniLayihe.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
-
-                    b.HasIndex("ImageId");
 
                     b.HasIndex("ProductId");
 
@@ -458,36 +421,6 @@ namespace MiniLayihe.Migrations
                     b.HasDiscriminator().HasValue("AppUser");
                 });
 
-            modelBuilder.Entity("CartProduct", b =>
-                {
-                    b.HasOne("MiniLayihe.Entities.Cart", null)
-                        .WithMany()
-                        .HasForeignKey("CartsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MiniLayihe.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CartProductImage", b =>
-                {
-                    b.HasOne("MiniLayihe.Entities.Cart", null)
-                        .WithMany()
-                        .HasForeignKey("CartsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MiniLayihe.Entities.ProductImage", null)
-                        .WithMany()
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -541,6 +474,14 @@ namespace MiniLayihe.Migrations
 
             modelBuilder.Entity("MiniLayihe.Entities.Cart", b =>
                 {
+                    b.HasOne("MiniLayihe.Entities.Product", null)
+                        .WithMany("Carts")
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("MiniLayihe.Entities.ProductImage", null)
+                        .WithMany("Carts")
+                        .HasForeignKey("ProductImageId");
+
                     b.HasOne("MiniLayihe.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -556,10 +497,6 @@ namespace MiniLayihe.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MiniLayihe.Entities.ProductImage", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId");
-
                     b.HasOne("MiniLayihe.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -567,8 +504,6 @@ namespace MiniLayihe.Migrations
                         .IsRequired();
 
                     b.Navigation("Cart");
-
-                    b.Navigation("Image");
 
                     b.Navigation("Product");
                 });
@@ -627,7 +562,14 @@ namespace MiniLayihe.Migrations
 
             modelBuilder.Entity("MiniLayihe.Entities.Product", b =>
                 {
+                    b.Navigation("Carts");
+
                     b.Navigation("ProductImages");
+                });
+
+            modelBuilder.Entity("MiniLayihe.Entities.ProductImage", b =>
+                {
+                    b.Navigation("Carts");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,14 @@
+﻿@model MiniLayihe.Models.UserDetailVM;
+@{
+    Layout = null;
+}
+<p>@Model.Email</p>
+<p>@Model.Name</p>
+@if (Model.Roles.Contains("Admin"))
+{
+    <a asp-action="DeleteAdmin" asp-route-mail="@Model.Email">Delete from Admin</a>
+}
+@if (!Model.Roles.Contains("Admin"))
+    {
+    <a asp-action="GiveAdmin" asp-route-mail="@Model.Email">Give Admin</a>
+    }

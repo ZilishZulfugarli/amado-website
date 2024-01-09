@@ -17,7 +17,7 @@ using MiniLayihe.Services;
 namespace MiniLayihe.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Policy = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminProductController : Controller
     {
         private readonly AppDbContext _dbContext;
@@ -144,7 +144,7 @@ namespace MiniLayihe.Areas.Admin.Controllers
                 BrandId = (int)product.BrandId,
                 CategoryId = (int)product.CategoryId,
                 ColorId = (int)product.ColorId,
-                Price = (int)product.Price,
+                Price = (decimal)product.Price,
                 Name = product.Name,
                 Description = product.Description,
                 ImageName = product.ProductImages?.FirstOrDefault()?.ImagePath ?? string.Empty

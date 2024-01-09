@@ -13,12 +13,12 @@ namespace MiniLayihe.Controllers
 	public class ProductController : Controller
 	{
         private readonly AppDbContext _dbContext;
-        private readonly IShoppingCartService _shoppingCartService;
+        //private readonly IShoppingCartService _shoppingCartService;
 
-        public ProductController(AppDbContext dbContext, IShoppingCartService shoppingCartService)
+        public ProductController(AppDbContext dbContext/*, IShoppingCartService shoppingCartService*/)
 		{
 			_dbContext = dbContext;
-			_shoppingCartService = shoppingCartService;
+			//_shoppingCartService = shoppingCartService;
 		}
 
 		public IActionResult Index(int id)
@@ -32,31 +32,7 @@ namespace MiniLayihe.Controllers
 			return View(model);
 		}
 
-        //public IActionResult AddToCart(int id)
-        //{
-        //	var product = _dbContext.Products.Include(x => x.ProductImages).FirstOrDefault(x => x.Id == id);
-
-        //		var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        //              _shoppingCartService.AddToCart(userId, product.Id, product.Name, product.Price, 1);
-
-        //          var model = new Cart()
-        //	{
-        //		UserId = userId,
-        //		ProductId = product.Id,
-        //              ProductName = product.Name,
-        //              Price = product.Price,
-        //              Quantity = product.Quantity,
-        //		Products = new List<Product> { product}
-        //          };
-
-        //          _dbContext.Carts.Add(model);
-        //          _dbContext.SaveChanges();
-
-
-        //          return RedirectToAction("Index", "Cart");
-        //}
-
-        public IActionResult AddToCart(int id, int quantity)
+        public IActionResult AddToCart(int id, int qty)
         {
             if (!User.Identity.IsAuthenticated)
             {
@@ -66,12 +42,12 @@ namespace MiniLayihe.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var cart = _dbContext.Carts
-                .Include(c => c.CartItems)
-                .ThenInclude(ci => ci.Product)
-                .ThenInclude(p => p.ProductImages)
-                .FirstOrDefault(c => c.UserId == userId);
+                .Include(x => x.CartItems)
+                .ThenInclude(x => x.Product)
+                .ThenInclude(x => x.ProductImages)
+                .FirstOrDefault(x => x.UserId == userId);
 
-            if (cart == null)
+            if(cart == null)
             {
                 cart = new Cart
                 {
@@ -82,42 +58,40 @@ namespace MiniLayihe.Controllers
             }
 
             var product = _dbContext.Products
-                .Include(p => p.ProductImages)
-                .FirstOrDefault(p => p.Id == id);
+                .Include(x => x.ProductImages)
+                .FirstOrDefault(x => x.Id == id);
 
-            if (product == null)
+            if (product == null) return NotFound();
+
+            var existingItem = _dbContext.Carts.FirstOrDefault(x => x.UserId == userId).CartItems.FirstOrDefault(x => x.ProductId == id);
+
+            if(existingItem != null)
             {
-                // Handle the case where the product does not exist
-                return NotFound();
-            }
-
-            // Check if the product is already in the cart
-            var existingCartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == id);
-
-            if (existingCartItem != null)
-            {
-                // Detach the existingCartItem from the context
-                _dbContext.Entry(existingCartItem).State = EntityState.Detached;
-
-                // Update the quantity of the existing item
-                existingCartItem.Quantity += quantity;
+                _dbContext.Entry(existingItem).State = EntityState.Detached;
             }
             else
             {
-                // Add a new cart item
-                var newCartItem = new CartItem
+                var cartItem = new CartItem
                 {
-                    ProductId = product.Id,
+                    Cart = cart,
+                    Product = product,
                     ProductName = product.Name,
                     Price = product.Price,
-                    Quantity = quantity,
-                    Image = product.ProductImages?.FirstOrDefault(),
-                    Product = product,
+                    Quantity = qty
                 };
 
-                cart.CartItems.Add(newCartItem);
-                _dbContext.CartItems.Add(newCartItem);
-                _dbContext.Entry(newCartItem).State = EntityState.Added;
+                if(qty > product.Quantity)
+                {
+                    ModelState.AddModelError("Quantity", "Haven't enough product at stock!");
+                    var model = new ProductVM()
+                    {
+                        Products = product,
+                    };
+                    return RedirectToAction("Index", "Product", model.Products.Id);
+                }
+                cart.CartItems.Add(cartItem);
+                _dbContext.CartItems.Add(cartItem);
+                _dbContext.Entry(cartItem).State = EntityState.Added;
             }
 
             _dbContext.SaveChanges();

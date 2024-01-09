@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MiniLayihe.Entities;
 
@@ -8,12 +9,13 @@ namespace MiniLayihe.Models
 	{
         public int Id { get; set; }
         public string? Name { get; set; }
-        public int Price { get; set; }
+        public decimal Price { get; set; }
         public string? Description { get; set; }
         public int CategoryId { get; set; }
         public int ColorId { get; set; }
         public int BrandId { get; set; }
         public string ImageName { get; set; }
+        [Required(ErrorMessage = "Please enter image")]
         public IFormFile? Image { get; set; }
         public Category? Categories { get; set; }
         public Color? Colors { get; set; }

@@ -14,6 +14,8 @@ namespace MiniLayihe.Models
         public List<Category>? Categories { get; set; }
         public List<Color>? Colors { get; set; }
         public List<Product>? Products { get; set; }
+        public int PageCount { get; set; }
+        public int CurrentPage { get; set; }
     }
 }
 

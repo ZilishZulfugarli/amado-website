@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using MiniLayihe.Entities;
 using MiniLayihe.Models;
+using MailKit.Net.Smtp;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
+using MailKit.Security;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -46,6 +51,25 @@ namespace MiniLayihe.Controllers
 
                 if (result.Succeeded)
                 {
+                    var email = new MimeMessage();
+
+                    email.From.Add(new MailboxAddress("Amado", "zilishiz@code.edu.az"));
+                    email.To.Add(new MailboxAddress(user.FirstName, user.Email));
+
+                    email.Subject = " AMADO WEBSITE";
+                    email.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
+                    {
+                        Text = user.FirstName + " " + "You register succesfully!"
+                    };
+
+                    using (var smtp = new SmtpClient())
+                    {
+                        smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.Auto);
+                        smtp.Authenticate("2002zilis@gmail.com", "okuf lkkk tznr forb");
+
+                        smtp.Send(email);
+                        smtp.Disconnect(true);
+                    }
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -56,6 +80,9 @@ namespace MiniLayihe.Controllers
 
                     
                 }
+
+                
+
 
                 ModelState.AddModelError(string.Empty, "Invalid login");
             }
@@ -102,7 +129,7 @@ namespace MiniLayihe.Controllers
 
         public async Task<IActionResult> Temp()
         {
-           var user = await _userManager.FindByEmailAsync("zilis@gmail.com");
+           var user = await _userManager.FindByEmailAsync("2002zilis@gmail.com");
             if (user is null) return View();
             await _userManager.AddToRoleAsync(user, "Admin");
             return RedirectToAction(nameof(Login));

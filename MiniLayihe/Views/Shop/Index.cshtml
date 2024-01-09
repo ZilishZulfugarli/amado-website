@@ -126,12 +126,10 @@
                         </div>
                         <div class="view-product d-flex align-items-center">
                             <p>View</p>
-                            <form action="#" method="get">
-                                <select name="select" id="viewProduct">
-                                    <option value="value">12</option>
-                                    <option value="value">24</option>
-                                    <option value="value">48</option>
-                                    <option value="value">96</option>
+                            <form asp-action="Index">
+                                <select name="productNumber" id="viewProduct" onchange="this.form.submit()">
+                                    <option value="3">3</option>
+                                    <option value="6">6</option>
                                 </select>
                             </form>
                         </div>
@@ -197,15 +195,13 @@
                 <!-- Pagination -->
                 <nav aria-label="navigation">
                     <ul class="pagination justify-content-end mt-50">
-                        <li class="page-item active"><a class="page-link" href="#">01.</a></li>
-                        <li class="page-item"><a class="page-link" href="#">02.</a></li>
-                        <li class="page-item"><a class="page-link" href="#">03.</a></li>
-                        <li class="page-item"><a class="page-link" href="#">04.</a></li>
+                        @for (int i = 1; i <= Model.PageCount; i++)
+                        {
+                            <li class="page-item  @(i == Model.CurrentPage ? "active" : "" )"><a asp-action="Index" asp-route-pagenumber="@i" class="page-link">@i</a></li>
+                        }
                     </ul>
                 </nav>
             </div>
         </div>
     </div>
 </div>
-
-

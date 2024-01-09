@@ -6,7 +6,7 @@ using MiniLayihe.Areas.Admin.Models;
 
 namespace MiniLayihe.Areas.Admin.Controllers;
 [Area("Admin")]
-[Authorize(Policy = "Admin")]
+[Authorize(Roles = "Admin")]
 //[Authorize]
 public class AdminHomeController : Controller
 {

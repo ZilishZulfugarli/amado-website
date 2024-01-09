@@ -48,7 +48,7 @@
                     <!-- Product Meta Data -->
                     <div class="product-meta-data">
                         <div class="line"></div>
-                        <p class="product-price">$180</p>
+                        <p class="product-price">$@Model.Products.Price</p>
                         <a href="product-details.html">
                             <h6>@Model.Products.Name</h6>
                         </a>
@@ -78,12 +78,12 @@
                         <div class="cart-btn d-flex mb-50">
                             <p>Qty</p>
                             <div class="quantity">
-                                <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
-                                <input asp-for="@Model.Cart.Quantity" asp-action="AddToCart" asp-controller="Product" asp-route-quantity="value" type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantity" value="">
-                                <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-caret-up" aria-hidden="true"></i></span>
+                                <span class="qty-minus" onclick="adjustQuantity(-1);"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
+                                <input asp-action="AddToCart" asp-controller="Product" type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="qty" value="">
+                                <span class="qty-plus" onclick="adjustQuantity(1);"><i class="fa fa-caret-up" aria-hidden="true"></i></span>
                             </div>
                         </div>
-                        <a asp-action="AddToCart" asp-controller="Product" asp-route-id="@Model.Products.Id" asp-route-quantity="@Model.Products.Quantity" type="submit" name="addtocart" value="5" class="btn amado-btn">Add to cart</a>
+                        <button asp-action="AddToCart" asp-route-id="@Model.Products.Id" type="submit" class="btn amado-btn">Add to cart</button>
                     </form>
 
                 </div>
@@ -91,5 +91,15 @@
         </div>
     </div>
 </div>
+@section Scripts{
 
+
+<script>
+    function adjustQuantity(change) {
+        var qtyElement = document.getElementById('qty');
+        var currentQuantity = parseInt(qtyElement.value) || 0;
+        var newQuantity = Math.max(1, currentQuantity + change);
+        qtyElement.value = newQuantity;
+    }</script>
+}
 

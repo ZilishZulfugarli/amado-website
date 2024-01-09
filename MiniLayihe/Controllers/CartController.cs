@@ -24,37 +24,35 @@ namespace MiniLayihe.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            // Load user's cart with related products
-            var user = _dbContext.Carts
-                .Include(c => c.Products)
-                .FirstOrDefault(x => x.UserId == userId);
-
-            var users = _dbContext.Carts.Include(x => x.CartItems).FirstOrDefault(x => x.UserId == userId);
-
-            var cart = _dbContext.Carts
-            .Include(c => c.CartItems)
-            .ThenInclude(ci => ci.Product)
-            .ThenInclude(x => x.ProductImages)
-            .FirstOrDefault(c => c.UserId == userId);
-            if (user == null)
+            if (User.Identity.IsAuthenticated)
             {
-                return View();
+
+
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var user = _dbContext.Carts.FirstOrDefault(x => x.UserId == userId);
+
+                var cart = _dbContext.Carts
+                    .Include(x => x.CartItems)
+                    .ThenInclude(x => x.Product)
+                    .ThenInclude(x => x.ProductImages)
+                    .FirstOrDefault(x => x.UserId == userId);
+
+                if (user == null) return View();
+
+                var model = new CartIndexVM
+                {
+                    CartItems = cart.CartItems,
+                    UserId = cart.UserId,
+                    Products = cart.CartItems.Select(x => x.Product).ToList(),
+                };
+
+                return View(model);
             }
-
-            var model = new CartIndexVM
+            else
             {
-                CartItems = cart.CartItems,
-                Products = cart.CartItems.Select(ci => ci.Product).ToList(),
-                UserId = cart.UserId,
-                Price = cart.Products.Sum(p => p.Price),
-                Quantity = cart.Quantity,
-            };
-
-            return View(model);
+                return RedirectToAction("Login", "Account");
+            }
         }
 
     }

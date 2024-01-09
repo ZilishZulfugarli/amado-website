@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using MiniLayihe.Entities;
 using MiniLayihe.Services;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,10 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<FileService>();
-builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+
+builder.Services.AddSignalR();
+//builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+
 
 builder.Services.AddAuthorization(options =>
 {
@@ -31,6 +35,8 @@ builder.Services.AddControllersWithViews();
 
 
 var app = builder.Build();
+
+
 
 using (var scope = app.Services.CreateScope())
 {
@@ -52,6 +58,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -80,6 +87,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area=exists}/{controller=AdminHome}/{action=index}/{id?}");
+
 
 app.Run();
 

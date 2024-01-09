@@ -14,7 +14,7 @@ using MiniLayihe.Models;
 namespace MiniLayihe.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Policy = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminColorController : Controller
     {
         private readonly AppDbContext _dbContext;
